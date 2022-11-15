@@ -9689,10 +9689,13 @@ const core = __nccwpck_require__(2186);
 
 async function run() {
     try {
+        // -- Input
         const {repo, owner, prerelease, gitHubSecret, releaseName, tagName} = getAndValidateInput()
 
+        // -- Action
         let release = await createRelease(gitHubSecret, owner, repo, tagName, releaseName, prerelease);
 
+        // -- Output
         core.setOutput('id', release.id);
         core.setOutput('html_url', release.htmlUrl);
         core.setOutput('upload_url', release.uploadUrl);
