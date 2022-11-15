@@ -10,6 +10,9 @@ inputs:
   build_number:
     description: 'If supplied, we will build an output with this version number in the form of {version}-alpha.{build_number}'
     required: false
+  fallback_tag:
+    description: 'If supplied and no tags are found, we will use this version'
+    required: false
 outputs:
   old_version:
     description: 'Old version'

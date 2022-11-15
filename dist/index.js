@@ -12858,6 +12858,7 @@ async function run() {
         }
         console.log(`Level: ${level}`)
 
+        const fallbackTag = core.getInput("fallback_tag", {required: false})
 
         let buildNumber = core.getInput("build_number", {required: false})
 
@@ -12879,10 +12880,20 @@ async function run() {
             core.setFailed(`Could not fetch tags for repo.`)
             return
         }
-        console.log(tagResponse.data[0])
+        let tag = null
+        if (tagResponse.data?.length > 0) {
+            console.log("Using latest tag from repository")
 
-        const tag = tagResponse.data[0].name
-        console.log(tag)
+            tag = tagResponse.data[0].name
+            console.log(tag)
+        } else {
+            tag = fallbackTag
+        }
+
+        if (!tag) {
+            core.setFailed(`no tags found, and fallback is not provided.`)
+            return;
+        }
 
         if (!semver.valid(tag)) {
             core.setFailed(`${tag} is not a valid version`)
