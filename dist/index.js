@@ -12851,7 +12851,7 @@ async function run() {
         const {owner: currentOwner, repo: currentRepo} = github.context.repo;
 
         const level = core.getInput("level")
-        if (validLevels.indexOf(level) > -1) {
+        if (validLevels.indexOf(level) === -1) {
             core.setFailed(`Not a valid level. Must be one of: ${validLevels.join(", ")}`)
             return;
         }
