@@ -33,14 +33,18 @@ async function run() {
         }
         console.log(`buildNumber: ${buildNumber}`)
 
-
-        // get tags
-        const tags = await octokit.rest.repos.listTags({
-            currentOwner,
-            currentRepo,
-            // page: 1,
-            // per_page: 1
-        });
+        let tags = []
+        try {
+            // get tags
+            tags = await octokit.rest.repos.listTags({
+                owner: currentOwner,
+                repo: currentRepo,
+                page: 100
+            });
+        } catch (e) {
+            core.setFailed(`Could not fetch tags for repo.`)
+            return
+        }
         console.log(tags)
 
         const tag = tags[0]
@@ -62,6 +66,7 @@ async function run() {
         core.setFailed(error.message);
     }
 }
+
 (async () => {
     await run();
 })();
