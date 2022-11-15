@@ -1,4 +1,4 @@
-const {GitHub, context} = require("@actions/github");
+const github = require("@actions/github");
 const core = require("@actions/core");
 const fs = require("fs");
 
@@ -6,10 +6,8 @@ async function run() {
 
     try {
         // Get authenticated GitHub client (Ocktokit): https://github.com/actions/toolkit/tree/master/packages/github#usage
-        const github = new GitHub(process.env.GITHUB_TOKEN);
-
         // Get owner and repo from context of payload that triggered the action
-        const {owner: currentOwner, repo: currentRepo} = context.repo;
+        const {owner: currentOwner, repo: currentRepo} = github.context.repo;
 
         // Get the inputs from the workflow file: https://github.com/actions/toolkit/tree/master/packages/core#inputsoutputs
         const tagName = core.getInput('tag_name', {required: true});
@@ -20,7 +18,7 @@ async function run() {
         const body = core.getInput('body', {required: false});
         const draft = core.getInput('draft', {required: false}) === 'true';
         const prerelease = core.getInput('prerelease', {required: false}) === 'true';
-        const commitish = core.getInput('commitish', {required: false}) || context.sha;
+        const commitish = core.getInput('commitish', {required: false}) || github.context.sha;
 
         const bodyPath = core.getInput('body_path', {required: false});
         const owner = core.getInput('owner', {required: false}) || currentOwner;

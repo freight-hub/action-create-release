@@ -9684,7 +9684,7 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-const {GitHub, context} = __nccwpck_require__(8633);
+const github = __nccwpck_require__(8633);
 const core = __nccwpck_require__(7341);
 const fs = __nccwpck_require__(7147);
 
@@ -9692,10 +9692,8 @@ async function run() {
 
     try {
         // Get authenticated GitHub client (Ocktokit): https://github.com/actions/toolkit/tree/master/packages/github#usage
-        const github = new GitHub(process.env.GITHUB_TOKEN);
-
         // Get owner and repo from context of payload that triggered the action
-        const {owner: currentOwner, repo: currentRepo} = context.repo;
+        const {owner: currentOwner, repo: currentRepo} = github.context.repo;
 
         // Get the inputs from the workflow file: https://github.com/actions/toolkit/tree/master/packages/core#inputsoutputs
         const tagName = core.getInput('tag_name', {required: true});
@@ -9706,7 +9704,7 @@ async function run() {
         const body = core.getInput('body', {required: false});
         const draft = core.getInput('draft', {required: false}) === 'true';
         const prerelease = core.getInput('prerelease', {required: false}) === 'true';
-        const commitish = core.getInput('commitish', {required: false}) || context.sha;
+        const commitish = core.getInput('commitish', {required: false}) || github.context.sha;
 
         const bodyPath = core.getInput('body_path', {required: false});
         const owner = core.getInput('owner', {required: false}) || currentOwner;
