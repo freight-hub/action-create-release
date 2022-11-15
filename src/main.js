@@ -39,7 +39,8 @@ async function run() {
             tags = await octokit.rest.repos.listTags({
                 owner: currentOwner,
                 repo: currentRepo,
-                page: 100
+                per_page: 1,
+                page: 1
             });
         } catch (e) {
             core.setFailed(`Could not fetch tags for repo.`)
