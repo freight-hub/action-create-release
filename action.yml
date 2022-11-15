@@ -1,45 +1,19 @@
 name: 'Hello World'
 description: 'Greet someone and record the time'
 inputs:
-  tag_name:
-    description: 'The name of the tag. This should come from the webhook payload, `github.GITHUB_REF` when a user pushes a new tag'
+  level:
+    description: 'Can be minor, major or patch'
     required: true
-  release_name:
-    description: 'The name of the release. For example, `Release v1.0.1`'
-    required: true
-  github_token:
-    description: 'Token to be used for github'
-    required: true
-  body:
-    description: 'Text describing the contents of the tag.'
-    required: false
-  body_path:
-    description: 'Path to file with information about the tag.'
-    required: false
-  draft:
-    description: '`true` to create a draft (unpublished) release, `false` to create a published one. Default: `false`'
-    required: false
-    default: false
-  prerelease:
-    description: '`true` to identify the release as a prerelease. `false` to identify the release as a full release. Default: `false`'
-    required: false
-    default: false
-  commitish:
-    description: 'Any branch or commit SHA the Git tag is created from, unused if the Git tag already exists. Default: SHA of current commit'
-    required: false
-  owner:
-    description: 'Owner of the repository if it is not the current one'
-    required: false
-  repo:
-    description: 'Repository on which to release.  Used only if you want to create the release on another repo'
+  build_number:
+    description: 'If supplied, we will build an output with this version number in the form of {version}-alpha.{build_number}'
     required: false
 outputs:
-  id:
-    description: 'The ID of the created Release'
-  html_url:
-    description: 'The URL users can navigate to in order to view the release'
-  upload_url:
-    description: 'The URL for uploading assets to the release'
+  old_version:
+    description: 'Old version'
+  new_version:
+    description: 'New version'
+  pre_release_version:
+    description: 'Pre release version built from {new_version}-alpha.{build_number}'
 runs:
   using: 'node16'
   main: 'dist/index.js'
