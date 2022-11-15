@@ -16,25 +16,30 @@ async function run() {
 
         const octokit = github.getOctokit(gitHubSecret)
         const {owner: currentOwner, repo: currentRepo} = github.context.repo;
+        console.log(`Owner: ${currentOwner}, Repo: ${currentRepo}`)
 
         const level = core.getInput("level")
         if (validLevels.indexOf(level) === -1) {
             core.setFailed(`Not a valid level. Must be one of: ${validLevels.join(", ")}`)
             return;
         }
+        console.log(`Level: ${level}`)
+
 
         let buildNumber = core.getInput("build_number", {required: false})
 
         if (!buildNumber) {
             buildNumber = 0
         }
+        console.log(`buildNumber: ${buildNumber}`)
+
 
         // get tags
         const tags = await octokit.rest.repos.listTags({
             currentOwner,
             currentRepo,
-            page: 1,
-            per_page: 1
+            // page: 1,
+            // per_page: 1
         });
         console.log(tags)
 
