@@ -33,10 +33,10 @@ async function run() {
         }
         console.log(`buildNumber: ${buildNumber}`)
 
-        let tags = []
+        let tagResponse = null
         try {
             // get tags
-            tags = await octokit.rest.repos.listTags({
+            tagResponse = await octokit.rest.repos.listTags({
                 owner: currentOwner,
                 repo: currentRepo,
                 per_page: 1,
@@ -46,11 +46,10 @@ async function run() {
             core.setFailed(`Could not fetch tags for repo.`)
             return
         }
-        console.log(tags)
+        console.log(tagResponse.data[0])
 
-        const tag = tags[0]
+        const tag = tagResponse.data[0].name
         console.log(tag)
-
 
         if (!semver.valid(tag)) {
             core.setFailed(`${tag} is not a valid version`)
