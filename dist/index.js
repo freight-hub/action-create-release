@@ -12840,6 +12840,11 @@ const validLevels = ['major', 'minor', 'patch']
 async function run() {
     try {
         // setup
+        if (!process.env.GITHUB_SECRET) {
+            core.setFailed(`No github secret found`)
+            return
+        }
+
         const octokit = github.getOctokit(process.env.GITHUB_SECRET)
         const {owner: currentOwner, repo: currentRepo} = github.context.repo;
 
