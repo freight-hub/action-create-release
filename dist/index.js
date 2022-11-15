@@ -9688,15 +9688,13 @@ const core = __nccwpck_require__(7341);
 const github = __nccwpck_require__(8633);
 
 try {
-    // `who-to-greet` input defined in action metadata file
-    const nameToGreet = core.getInput('version');
-
-    const tags = github.rest.git.getTag()
-    console.log(tags)
-
-    console.log(`Hello ${nameToGreet}!`);
-    const payload = JSON.stringify(github.context.payload, undefined, 2)
-    console.log(`The event payload: ${payload}`);
+    const ref = github.context.ref
+    console.log(ref)
+    const tagPath = 'refs/tags/'
+    if (ref && ref.startsWith(tagPath)) {
+        let tag = ref.substring(tagPath.length, ref.length)
+        console.log(tag)
+    }
 } catch (error) {
     core.setFailed(error.message);
 }
