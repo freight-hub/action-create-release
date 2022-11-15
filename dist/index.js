@@ -12863,7 +12863,7 @@ async function run() {
         }
 
         // get tags
-        const tags = octokit.rest.repos.listTags({
+        const tags = await octokit.rest.repos.listTags({
             currentOwner,
             currentRepo,
             page: 1,
