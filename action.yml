@@ -7,6 +7,9 @@ inputs:
   release_name:
     description: 'The name of the release. For example, `Release v1.0.1`'
     required: true
+  github_token:
+    description: 'Token to be used for github'
+    required: true
   body:
     description: 'Text describing the contents of the tag.'
     required: false
