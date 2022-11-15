@@ -6,13 +6,15 @@ const validLevels = ['major', 'minor', 'patch']
 
 async function run() {
     try {
+        const gitHubSecret = core.getInput("github_secret")
+
         // setup
-        if (!process.env.GITHUB_SECRET) {
+        if (!gitHubSecret) {
             core.setFailed(`No github secret found`)
             return
         }
 
-        const octokit = github.getOctokit(process.env.GITHUB_SECRET)
+        const octokit = github.getOctokit(gitHubSecret)
         const {owner: currentOwner, repo: currentRepo} = github.context.repo;
 
         const level = core.getInput("level")

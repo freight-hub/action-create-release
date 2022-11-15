@@ -4,6 +4,9 @@ inputs:
   level:
     description: 'Can be minor, major or patch'
     required: true
+  github_secret:
+    description: 'Secret for github'
+    required: true
   build_number:
     description: 'If supplied, we will build an output with this version number in the form of {version}-alpha.{build_number}'
     required: false
