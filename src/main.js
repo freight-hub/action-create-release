@@ -1,14 +1,10 @@
 const github = require("@actions/github");
 const core = require("@actions/core");
-const semver = require("semver");
-
-const validLevels = ['major', 'minor', 'patch']
 
 async function run() {
     try {
         const gitHubSecret = core.getInput("github_secret")
 
-        // setup
         if (!gitHubSecret) {
             core.setFailed(`No github secret found`)
             return
@@ -18,60 +14,42 @@ async function run() {
         const {owner: currentOwner, repo: currentRepo} = github.context.repo;
         console.log(`Owner: ${currentOwner}, Repo: ${currentRepo}`)
 
-        const level = core.getInput("level")
-        if (validLevels.indexOf(level) === -1) {
-            core.setFailed(`Not a valid level. Must be one of: ${validLevels.join(", ")}`)
+        const tagName = core.getInput('tag', {required: true});
+
+        if (!tagName) {
+            core.setFailed(`Tag not provided`)
             return;
         }
-        console.log(`Level: ${level}`)
 
-        const fallbackTag = core.getInput("fallback_tag", {required: false})
+        const releaseName = core.getInput('release_name', {required: false});
+        const prerelease = core.getInput('prerelease', {required: false}) === 'true';
 
-        let buildNumber = core.getInput("build_number", {required: false})
+        let createReleaseResponse = null;
 
-        if (!buildNumber) {
-            buildNumber = 0
-        }
-        console.log(`buildNumber: ${buildNumber}`)
-
-        let tagResponse = null
         try {
-            // get tags
-            tagResponse = await octokit.rest.repos.listTags({
+            createReleaseResponse = await octokit.rest.repos.createRelease({
                 owner: currentOwner,
                 repo: currentRepo,
-                per_page: 1,
-                page: 1
+                tag_name: tagName,
+                name: releaseName ?? `Release ${tagName}`,
+                prerelease: prerelease,
             });
         } catch (e) {
-            core.setFailed(`Could not fetch tags for repo.`)
+            core.setFailed(`Could not create release for repo: ${e.message}`)
             return
         }
-        let tag = null
-        if (tagResponse.data?.length > 0) {
-            console.log("Using latest tag from repository")
+        // Get the ID, html_url, and upload URL for the created Release from the response
+        const {
+            data: {
+                id: releaseId,
+                html_url: htmlUrl,
+                upload_url: uploadUrl
+            }
+        } = createReleaseResponse;
 
-            tag = tagResponse.data[0].name
-            console.log(tag)
-        } else {
-            tag = fallbackTag
-        }
-
-        if (!tag) {
-            core.setFailed(`no tags found, and fallback is not provided.`)
-            return;
-        }
-
-        if (!semver.valid(tag)) {
-            core.setFailed(`${tag} is not a valid version`)
-            return;
-        }
-
-        const newVersion = semver.inc(tag, level)
-        core.setOutput("old_version", tag)
-        core.setOutput("new_version", newVersion)
-        core.setOutput("pre_release_version", `${newVersion}-alpha.${buildNumber}`)
-
+        core.setOutput('id', releaseId);
+        core.setOutput('html_url', htmlUrl);
+        core.setOutput('upload_url', uploadUrl);
     } catch
         (error) {
         core.setFailed(error.message);
