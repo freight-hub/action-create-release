@@ -1,11 +1,11 @@
 name: 'Create release'
 description: 'Creates a release in github with a tag based on input parameters'
 inputs:
+  token:
+    description: 'Secret for github'
+    required: true
   tag:
     description: 'Tag for release'
-    required: true
-  github_secret:
-    description: 'Secret for github'
     required: true
   release_name:
     description: 'The name of the release, default `Release {tag}`'

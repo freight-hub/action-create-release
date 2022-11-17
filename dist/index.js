@@ -9684,23 +9684,23 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-const github = __nccwpck_require__(5438);
-const core = __nccwpck_require__(2186);
+const github = __nccwpck_require__(5438)
+const core = __nccwpck_require__(2186)
 
 async function run() {
     try {
         // -- Input
-        const {repo, owner, prerelease, gitHubSecret, releaseName, tagName} = getAndValidateInput()
+        const { repo, owner, prerelease, gitHubSecret, releaseName, tagName } = getAndValidateInput()
 
         // -- Action
-        let release = await createRelease(gitHubSecret, owner, repo, tagName, releaseName, prerelease);
+        let release = await createRelease(gitHubSecret, owner, repo, tagName, releaseName, prerelease)
 
         // -- Output
-        core.setOutput('id', release.id);
-        core.setOutput('html_url', release.htmlUrl);
-        core.setOutput('upload_url', release.uploadUrl);
+        core.setOutput('id', release.id)
+        core.setOutput('html_url', release.htmlUrl)
+        core.setOutput('upload_url', release.uploadUrl)
     } catch (error) {
-        core.setFailed(error.message);
+        core.setFailed(error.message)
     }
 }
 
@@ -9714,12 +9714,12 @@ async function createRelease(gitHubSecret, owner, repo, tagName, releaseName, pr
             tag_name: tagName,
             name: releaseName ?? `Release ${tagName}`,
             prerelease: prerelease,
-        });
+        })
 
         return {
             id: response.data.id,
             htmlUrl: response.data.html_url,
-            uploadUrl: response.data.upload_url
+            uploadUrl: response.data.upload_url,
         }
     } catch (e) {
         throw new Error(`could not create release: ${e.message}`)
@@ -9727,15 +9727,15 @@ async function createRelease(gitHubSecret, owner, repo, tagName, releaseName, pr
 }
 
 function getAndValidateInput() {
-    const gitHubSecret = core.getInput("github_secret")
+    const gitHubSecret = core.getInput('token')
     if (!gitHubSecret) throw new Error(`No github secret found`)
 
-    const tagName = core.getInput('tag', {required: true});
+    const tagName = core.getInput('tag', { required: true })
     if (!tagName) throw new Error(`No tag provided`)
 
-    const releaseName = core.getInput('release_name', {required: false});
-    const prerelease = core.getInput('prerelease', {required: false}) === 'true';
-    const repo = github.context.repo;
+    const releaseName = core.getInput('release_name', { required: false })
+    const prerelease = core.getInput('prerelease', { required: false }) === 'true'
+    const repo = github.context.repo
 
     return {
         owner: repo.owner,
@@ -9743,14 +9743,14 @@ function getAndValidateInput() {
         gitHubSecret,
         tagName,
         releaseName,
-        prerelease
+        prerelease,
     }
 }
 
+;(async () => {
+    await run()
+})()
 
-(async () => {
-    await run();
-})();
 })();
 
 module.exports = __webpack_exports__;
